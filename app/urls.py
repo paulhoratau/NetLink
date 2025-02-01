@@ -4,6 +4,8 @@ from rest_framework_simplejwt.views import (
 )
 from django.urls import path
 from . import views
+from django.conf.urls.static import static
+from django.conf import settings
 
 urlpatterns = [
 
@@ -12,4 +14,6 @@ urlpatterns = [
     path('auth/register/', views.CreateUserView.as_view(), name='register'),
     path('search/users', views.SearchUsers.as_view(), name='search'),
     path('profile/', views.ProfileDetailed.as_view(), name="user_profile"),
-]
+    path('post/', views.PostViewSet.as_view(), name="post")
+
+] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

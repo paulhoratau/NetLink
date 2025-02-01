@@ -1,6 +1,7 @@
 from rest_framework import serializers
 from django.contrib.auth import get_user_model
 from django.contrib.auth.models import User as UserModel
+from .models import Post
 
 UserModel = get_user_model()
 
@@ -36,3 +37,13 @@ class UserProfileSerializer(serializers.ModelSerializer):
     class Meta:
         model = UserModel
         fields = ['id', 'username', 'email', "first_name", "last_name"]
+
+class PostSerializer(serializers.ModelSerializer):
+
+    creator = serializers.ReadOnlyField(source='creator.username')
+    creator_id = serializers.ReadOnlyField(source='creator.id')
+    image_url = serializers.ImageField(required=False)
+
+    class Meta:
+        model = Post
+        fields = "__all__"

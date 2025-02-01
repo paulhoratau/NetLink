@@ -1,12 +1,12 @@
-from django.shortcuts import render
-from rest_framework import permissions
+from rest_framework import permissions, generics
 from rest_framework.generics import CreateAPIView
 from django.contrib.auth import get_user_model
-from rest_framework.views import APIView
 from rest_framework.response import Response
 from django.http import HttpResponse
-from rest_framework import generics
-from .serializers import UserSearchSerializer, UserSerializer, UserProfileSerializer
+from .serializers import UserSearchSerializer, UserSerializer, UserProfileSerializer, PostSerializer
+from .models import Post
+from rest_framework.parsers import MultiPartParser, FormParser
+
 UserModel = get_user_model()
 
 class CreateUserView(CreateAPIView):
@@ -38,3 +38,13 @@ class ProfileDetailed(generics.RetrieveUpdateDestroyAPIView):
 
     def get_object(self):
         return self.request.user
+
+
+
+class PostViewSet(CreateAPIView):
+    queryset = Post.objects.order_by('-creation_date')
+    serializer_class = PostSerializer
+    parser_classes = (MultiPartParser, FormParser)
+
+    def perform_create(self, serializer):
+        serializer.save(creator=self.request.user)
