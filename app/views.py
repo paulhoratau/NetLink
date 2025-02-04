@@ -3,8 +3,8 @@ from rest_framework.generics import CreateAPIView
 from django.contrib.auth import get_user_model
 from rest_framework.response import Response
 from django.http import HttpResponse
-from .serializers import UserSearchSerializer, UserSerializer, UserProfileSerializer, PostSerializer
-from .models import Post
+from .serializers import UserSearchSerializer, UserSerializer, UserProfileSerializer, PostSerializer, CommentSerializer, CommentReplySerializer
+from .models import Post, Comment, CommentReply
 from rest_framework.parsers import MultiPartParser, FormParser
 
 UserModel = get_user_model()
@@ -41,10 +41,38 @@ class ProfileDetailed(generics.RetrieveUpdateDestroyAPIView):
 
 
 
-class PostViewSet(CreateAPIView):
+class PostCreate(CreateAPIView):
     queryset = Post.objects.order_by('-creation_date')
     serializer_class = PostSerializer
     parser_classes = (MultiPartParser, FormParser)
 
     def perform_create(self, serializer):
         serializer.save(creator=self.request.user)
+
+class PostDetailed(generics.RetrieveUpdateDestroyAPIView):
+    queryset = Post.objects.all()
+    serializer_class = PostSerializer
+    parser_classes = (MultiPartParser, FormParser)
+
+    def perform_create(self, serializer):
+        serializer.save(creator=self.request.user)
+
+class CommentList(generics.ListCreateAPIView):
+    queryset = Comment.objects.all()
+    serializer_class = CommentSerializer
+
+    def perform_create(self, serializer):
+        serializer.save(owner=self.request.user)
+
+
+class CommentDetail(generics.RetrieveUpdateDestroyAPIView):
+    queryset = Comment.objects.all()
+    serializer_class = CommentSerializer
+
+
+class CommentReply(generics.ListCreateAPIView):
+    queryset = CommentReply.objects.all()
+    serializer_class = CommentReplySerializer
+
+    def perform_create(self, serializer):
+        serializer.save(owner=self.request.user)

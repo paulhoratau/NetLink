@@ -1,7 +1,7 @@
 from rest_framework import serializers
 from django.contrib.auth import get_user_model
 from django.contrib.auth.models import User as UserModel
-from .models import Post
+from .models import Post, Comment, CommentReply
 
 UserModel = get_user_model()
 
@@ -38,12 +38,31 @@ class UserProfileSerializer(serializers.ModelSerializer):
         model = UserModel
         fields = ['id', 'username', 'email', "first_name", "last_name"]
 
-class PostSerializer(serializers.ModelSerializer):
+class CommentReplySerializer(serializers.ModelSerializer):
+    owner = serializers.ReadOnlyField(source='owner.username')
+    comment = serializers.PrimaryKeyRelatedField(queryset=Comment.objects.all())
 
+    class Meta:
+        model = CommentReply
+        fields = '__all__'
+
+class CommentSerializer(serializers.ModelSerializer): 
+    owner = serializers.ReadOnlyField(source='owner.username')
+    post = serializers.PrimaryKeyRelatedField(read_only=True)
+    replies = CommentReplySerializer(many=True, read_only=True, source="commentreply")
+
+    class Meta:
+        model = Comment
+        fields = '__all__'
+
+class PostSerializer(serializers.ModelSerializer):
     creator = serializers.ReadOnlyField(source='creator.username')
     creator_id = serializers.ReadOnlyField(source='creator.id')
     image_url = serializers.ImageField(required=False)
+    content = serializers.CharField(max_length=255)
+    creation_date = serializers.DateField()
+    comments = CommentSerializer(many=True, read_only=True)
 
     class Meta:
         model = Post
-        fields = "__all__"
+        fields = '__all__'
