@@ -18,5 +18,6 @@ urlpatterns = [
     path('post/<int:pk>', views.PostDetailed.as_view(), name="post-detailed"),
     path('comment/', views.CommentList.as_view(), name='comment-list-create'),
     path('comment/<int:pk>/', views.CommentDetail.as_view(), name='comment-detail'),
-    path('comment/<int:pk>/replies/', views.CommentReply.as_view(), name='comment-reply'),
+    path('comment/<int:pk>/reply/', views.CommentReply.as_view(), name='comment-reply'),
+
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
