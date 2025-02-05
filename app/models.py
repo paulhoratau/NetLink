@@ -8,6 +8,7 @@ class Post(models.Model):
     content = models.CharField(max_length=255)
     creation_date = models.DateField(auto_now=True)
     image_url = models.ImageField(upload_to=upload_to, blank=True, null=True)
+    views = models.IntegerField(default=0)
 
 class Comment(models.Model):
     created = models.DateTimeField(auto_now_add=True)

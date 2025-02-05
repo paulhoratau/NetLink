@@ -46,7 +46,7 @@ class CommentReplySerializer(serializers.ModelSerializer):
         model = CommentReply
         fields = '__all__'
 
-class CommentSerializer(serializers.ModelSerializer): 
+class CommentSerializer(serializers.ModelSerializer):
     owner = serializers.ReadOnlyField(source='owner.username')
     post = serializers.PrimaryKeyRelatedField(read_only=True)
     replies = CommentReplySerializer(many=True, read_only=True, source="commentreply")
@@ -60,7 +60,7 @@ class PostSerializer(serializers.ModelSerializer):
     creator_id = serializers.ReadOnlyField(source='creator.id')
     image_url = serializers.ImageField(required=False)
     content = serializers.CharField(max_length=255)
-    creation_date = serializers.DateField()
+    creation_date = serializers.DateField(read_only=True)
     comments = CommentSerializer(many=True, read_only=True)
 
     class Meta:
