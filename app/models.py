@@ -1,6 +1,9 @@
 from django.db import models
+from django.contrib.auth.models import User
 
 # Create your models here.
+
+
 def upload_to(instance, filename):
     return 'images/{filename}'.format(filename=filename)
 class Post(models.Model):

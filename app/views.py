@@ -42,13 +42,12 @@ class SearchUsers(generics.ListAPIView):
         serializer = self.get_serializer(queryset, many=True)
         return Response(serializer.data)
 
-class ProfileDetailed(generics.RetrieveUpdateDestroyAPIView):
+class ProfileDetailed(APIView):
     queryset = UserModel.objects.all()
     serializer_class = UserProfileSerializer
 
     def get_object(self):
         return self.request.user
-
 
 
 class PostCreate(CreateAPIView):
