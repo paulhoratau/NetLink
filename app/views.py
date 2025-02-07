@@ -59,7 +59,7 @@ class PostCreate(CreateAPIView):
         serializer.save(creator=self.request.user)
 
 
-class PostDetailed(APIView):
+class PostDetailed(generics.RetrieveUpdateDestroyAPIView):
     parser_classes = (MultiPartParser, FormParser)
 
     def get(self, request, pk):
